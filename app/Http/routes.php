@@ -11,8 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function ($id) {
+    $users = DB::table("users")->get();
+	//return view('welcome');
+	return $users;
 });
 
 /*
