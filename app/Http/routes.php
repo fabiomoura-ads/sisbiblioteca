@@ -17,9 +17,15 @@ Route::get('/', function () {
 });
 
 Route::get('/users', "UserController@getAll" );
-
 Route::controller("categoria", "CategoriaController");
 
+
+Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
+	Route::resource("locacao", "LocacaoController");
+	Route::resource("editora", "EditoraController");
+	Route::resource("aluno", "AlunoController");
+	Route::resource("categoria", "CategoriaController");
+});
 
 /*Route::get('/categoria/{nome}', function ($nome) {
 	$nome = strtolower($nome);
