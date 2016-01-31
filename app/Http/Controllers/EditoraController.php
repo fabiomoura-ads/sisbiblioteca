@@ -32,11 +32,11 @@ class EditoraController extends Controller
 
     	);
 
-    	if(!$validaor->fails()){
-    		$editora = $this->editora;
+    	if(!$validator->fails()){
+    		$editora = $this->editora->create($request->all());
     		return ['success' => 'Editora '.$editora->nome. 'adicionada com sucesso'];
     	}
-
+        return ['error' => 'Erro ao adicionar editora.'];
     }
 
 
@@ -49,16 +49,17 @@ class EditoraController extends Controller
 		$validator = Validator::make(
     		$request->all(),
     		[
-    			'name' => 'required',
+    			'name' => 'required',    
     			'email' => 'email|unique:editoras'.$id
     		]
     	);
 
-    	if(!$validaor->fails()){
-    		$editora = $this->editora;
+    	if(!$validator->fails()){
+    		$editora = $this->editora->update($request->all());
     		return ['success' => 'Editora '.$editora->nome. 'atualizada com sucesso'];
     	}
-
+        //return $validator->errors();
+        return $request->all();
     }
 
     public function destroy($id){
