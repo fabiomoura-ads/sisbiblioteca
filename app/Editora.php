@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Editora extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $table = 'editoras';
     protected $fillable = [
         'nome', 'telefone', 'email',
     ];
