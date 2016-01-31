@@ -11,11 +11,27 @@
 |
 */
 
-Route::get('/', function ($id) {
+Route::get('/', function () {
     $users = DB::table("users")->get();
-	//return view('welcome');
 	return $users;
 });
+
+Route::get('/users', "UserController@getAll" );
+
+Route::controller("categoria", "CategoriaController");
+
+
+/*Route::get('/categoria/{nome}', function ($nome) {
+	$nome = strtolower($nome);
+	$nome = ucfirst($nome);	
+    $categoria = DB::table("categoria")->insert([
+		"nome" => $nome
+	]);
+	
+	return "Registro inserido com sucesso!";
+});
+
+Route::get('/categoria/{nome}', "CategoriaController@insert");*/
 
 /*
 |--------------------------------------------------------------------------
