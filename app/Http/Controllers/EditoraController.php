@@ -12,6 +12,7 @@ use App\Editora;
 class EditoraController extends Controller
 {
     protected $editora;
+	protected $CLASS_NAME = "Editora";
 
     public function __construct(Editora $editora){
     	$this->editora = $editora;
@@ -34,9 +35,9 @@ class EditoraController extends Controller
 
     	if(!$validator->fails()){
     		$editora = $this->editora->create($request->all());
-    		return ['success' => 'Editora '.$editora->nome. 'adicionada com sucesso'];
+			return $this->getMessageReturn("success", "adicionada com sucesso", $editora->nome );
     	}
-        return ['error' => 'Erro ao adicionar editora.'];
+		return $this->getMessageReturn("error", "não adicionada, verifique!.", null );
     }
 
 
@@ -56,19 +57,19 @@ class EditoraController extends Controller
 
     	if(!$validator->fails()){
     		$editora = $this->editora->update($request->all());
-    		return ['success' => 'Editora '.$editora->nome. 'atualizada com sucesso'];
+			return $this->getMessageReturn("success", "atualizada com sucesso", $editora->nome );
     	}
-        //return $validator->errors();
-        return $request->all();
+
+		return $this->getMessageReturn("error", "não foi atualizada, verifique!", null );
     }
 
     public function destroy($id){
     	$editoras = $this->editora->find($id);
     	if($editoras->delete()){
-    		return ['success' => 'Editora '.$editoras->id. ' deleta!'];
+    		return $this->getMessageReturn("success", "deletada com sucesso!", $editora->nome );
     	}
 
-    	return ['error' => 'Erro ao deleta categoria '.$editoras->id.'.'];
+		return $this->getMessageReturn("error", "não foi deletada, verifique!", null );
     }
 }
 	
