@@ -92,6 +92,31 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+		'id' => [
+			'required' => 'A informação id é obrigatório, verifique!'
+		],	
+		'id' => [
+			'numeric' => 'A informação id deve ser um número, verifique!'
+		],					
+		'nome' => [
+			'required' => 'O campo nome é obrigatório, verifique!'
+		],
+		'nome' => [
+			'min' => 'O campo nome deve ter pelo menos :min caracteres, verifique!'
+		],
+		'nome' => [
+			'max' => 'O campo nome deve ter no máximo :max caracteres, verifique!'
+		],		
+		'email' => [
+			'required' => 'O campo email é obrigatório, verifique!'
+		], 
+		'email' => [
+			'unique' => 'O email informado já existe cadastrado, verifique!'
+		],
+		'email' => [
+			'email' => 'O email informado não é um endereço de email válido, verifique!'
+		]
+		
     ],
 
     /*
