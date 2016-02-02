@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Categoria;
+use Validator;
 
 
 class CategoriaController extends Controller
@@ -17,22 +18,27 @@ class CategoriaController extends Controller
 	
 	public function __construct(Categoria $categoria){
 		$this->categoria = $categoria;
-		$erros = array();
 	}
 	
 	public function getIndex(){
-		return Categoria::all();
+		return $this->categoria->all();
 	}
 	
-	public function postStore($nome){		
-		$funcao = "postStore()";
+	public function postStore(Request $request){		
 
-		$this->validaPassagemDeParametro($funcao, "nome", $nome, null);
+		$validator = Validator::make(
+			$request->all(), 
+			[
+				'nome' => 'required|min:5'
+			]
+		);
 		
-		if ( count($this->erros) > 0 ) {
-			return $this->erros;
-		}		
-				
+		if ( $validator->fails() ) {
+			return $validator->errors();			
+		} 	
+		
+		$nome = $request->input("nome");
+		
 		$nome = strtolower($nome);
 		$nome = ucfirst($nome);	
 		
@@ -40,7 +46,7 @@ class CategoriaController extends Controller
 		$categoria->nome = $nome;
 		
 		if ( $categoria->save() ) {			
-			$mensagem = $this->getMessageReturn("success", "inserida com sucesso!", $nome );			
+			$mensagem = $this->getMessageReturn("success", "inserida com sucesso!", $nome );	
 		} else {
 			$mensagem = $this->getMessageReturn("error", "não foi inserida, verifique!", $nome );			
 		}
@@ -48,17 +54,8 @@ class CategoriaController extends Controller
 		return $mensagem;
 	}	
 	
-	public function getShow($id){
-		$funcao = "getShow()"; 
-			
-		$this->validaPassagemDeParametro($funcao, "id", $id, null);
-		
-		if ( count($this->erros) > 0 ) {
-			return $this->erros;
-		}
-		
-		$categoria = $this->categoria;
-		$categoria = $categoria->find($id);
+	public function getShow($id){		
+		$categoria = $this->categoria->find($id);
 		
 		if ( !$categoria ) {
 			return $this->getMessageReturn("error", "não foi localizada!", $id);			
@@ -68,78 +65,53 @@ class CategoriaController extends Controller
 	}
 	
 	public function postUpdate(Request $request){
-		$funcao = "postUpdate()";
 		
+		$validator = Validator::make(
+			$request->all(), 
+			[
+				'id' => 'required|numeric',
+				'nome' => 'required|min:5|max:40'
+			]
+		);
+		
+		if ( $validator->fails() ) {
+			return $validator->errors();			
+		} 
+				
 		$id = $request->input("id");
-		$nome = $request->input("nome");
-		
-		$this->validaPassagemDeParametro($funcao, "id", $id, null);
-		$this->validaPassagemDeParametro($funcao, "nome", $nome, null);
-		
-		if ( count($this->erros) > 0 ) {
-			return $this->erros;
-		}			
+		$nome = $request->input("nome");	
 				
 		$categoria = $this->categoria->find($id);
 		
-		if ( !$categoria ) {
-			return $this->getMessageReturn("error", "nao foi localizada", $id);			
+		if ( $categoria ) {
+			
+			if ( $categoria->update(["nome" => $nome]) ) {
+				return $this->getMessageReturn("success", "atualizada com sucesso!", $nome);			
+			} 
+
+			return $this->getMessageReturn("error", "não foi atualizada, verifique!", $id);			
+
 		} 
 		
-		if ( $categoria->update(["nome" => $nome]) ) {
-			return $this->getMessageReturn("success", "atualizada com sucesso!", $nome);			
-		}
-		
-		return $this->getMessageReturn("error", "nao foi atualizada, verifique!", $id);			
+		return $this->getMessageReturn("error", "não foi localizada", $id);									
 	}
 		
 	public function postDestroy($id){
-		$funcao = "postDestroy()";
 		
-		$this->validaPassagemDeParametro($funcao, "id", $id, null);
-		
-		if ( count($this->erros) > 0 ) {
-			return $this->erros;
-		}	
-
 		$categoria = $this->categoria->find($id);
 
 		if ( $categoria ) {
 			$nome = $categoria->nome;
 			
 			if ( $categoria->delete() ){ 
-				return $this->getMessageReturn("success", "excluida com sucesso!", $nome);			
+				return $this->getMessageReturn("success", "excluída com sucesso!", $nome);			
 			} 
 			
-			return $this->getMessageReturn("error", "nao foi excluida, verifique!", $id);			
+			return $this->getMessageReturn("error", "não foi possível excluir, verifique!", $id);			
 		}
 		
-		return $this->getMessageReturn("error", "nao foi localizada!", $id);			
+		return $this->getMessageReturn("error", "não foi localizada!", $id);			
 		
 	}
-	
-	/**
-	 * Método getMessageReturn() foi criado para encapsular as mensagens de retorno para view,
-	 * sendo parametrizável para qualque tipo de retorno, atráves dos parametros recebidos;
-	 * $tipo = Tipo de mensagem de retorno, "sucess" ou "error"; ( obrigatório )
-	 * $mensagem = Mensagem que será retornada; ( obrigatório )
-	 * $nome = Nome do registro que está sendo manipulado ( opcional ) 
-	 * Por: Fábio Moura, em 31/01/2016
-	 **/
-	public function getMessageReturn($tipo, $mensagem, $nome){
 		
-		if ( $nome ) {
-			$mensagem = $this->CLASS_NAME." ".$nome." ".$mensagem;	
-		} else {
-			$mensagem = $this->CLASS_NAME." ".$mensagem;				
-		} 
-		
-		$resposta = [$tipo => $mensagem];
-		return $resposta;
-	}
-		
-	public function getFail($acao){
-		return ["error" => "Não foi possível ".$acao." o registro!\nEntre em contato com o administrador do sistema."];
-	}	
-
 }
