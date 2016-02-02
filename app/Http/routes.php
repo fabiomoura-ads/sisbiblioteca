@@ -17,8 +17,6 @@ Route::get('/', function () {
 });
 
 Route::get('/users', "UserController@getAll" );
-Route::controller("categoria", "CategoriaController");
-
 
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 	Route::resource("locacao", "LocacaoController");
@@ -26,18 +24,6 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 	Route::resource("aluno", "AlunoController");
 	Route::resource("categoria", "CategoriaController");
 });
-
-/*Route::get('/categoria/{nome}', function ($nome) {
-	$nome = strtolower($nome);
-	$nome = ucfirst($nome);	
-    $categoria = DB::table("categoria")->insert([
-		"nome" => $nome
-	]);
-	
-	return "Registro inserido com sucesso!";
-});
-
-Route::get('/categoria/{nome}', "CategoriaController@insert");*/
 
 /*
 |--------------------------------------------------------------------------
