@@ -6,25 +6,23 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Categoria;
 use Validator;
-
+use App\Categoria;
 
 class CategoriaController extends Controller
-{
-	
-	protected $categoria;
+{	
+	protected $context;
 	protected $CLASS_NAME = "Categoria";
 	
-	public function __construct(Categoria $categoria){
-		$this->categoria = $categoria;
+	public function __construct(Categoria $context){
+		$this->context = $context;
 	}
 	
-	public function getIndex(){
-		return $this->categoria->all();
+	public function index(){
+		return $this->context->all();
 	}
 	
-	public function postStore(Request $request){		
+	public function store(Request $request){		
 
 		$validator = Validator::make(
 			$request->all(), 
@@ -35,36 +33,30 @@ class CategoriaController extends Controller
 		
 		if ( $validator->fails() ) {
 			return $validator->errors();			
-		} 	
+		};		
+				
+		$resposta = $this->context->create($request->all());
 		
-		$nome = $request->input("nome");
+		if ( $resposta ) {
+			return $this->getMessageReturn("success", "inserida com sucesso!", $resposta, $resposta["nome"] );			
+		} 
 		
-		$nome = strtolower($nome);
-		$nome = ucfirst($nome);	
+		return $this->getMessageReturn("error", "não foi inserida, verifique!", $resposta, null );			
 		
-		$categoria = $this->categoria;
-		$categoria->nome = $nome;
-		
-		if ( $categoria->save() ) {			
-			$mensagem = $this->getMessageReturn("success", "inserida com sucesso!", $nome );	
-		} else {
-			$mensagem = $this->getMessageReturn("error", "não foi inserida, verifique!", $nome );			
-		}
-		
-		return $mensagem;
 	}	
 	
-	public function getShow($id){		
+	public function show($id){			
+		
 		$categoria = $this->categoria->find($id);
 		
-		if ( !$categoria ) {
-			return $this->getMessageReturn("error", "não foi localizada!", $id);			
+		if ( !categoria ) {
+			return $this->getMessageReturn("error", "não foi localizada!", null, $id);			
 		}
 
 		return $categoria;
 	}
 	
-	public function postUpdate(Request $request){
+	public function update(Request $request){
 		
 		$validator = Validator::make(
 			$request->all(), 
@@ -96,7 +88,7 @@ class CategoriaController extends Controller
 		return $this->getMessageReturn("error", "não foi localizada", $id);									
 	}
 		
-	public function postDestroy($id){
+	public function destroy($id){
 		
 		$categoria = $this->categoria->find($id);
 
