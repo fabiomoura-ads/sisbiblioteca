@@ -11,15 +11,20 @@ use App\Editora;
 
 class EditoraController extends Controller
 {
-    protected $editora;
+    protected $context;
 	protected $CLASS_NAME = "Editora";
 
-    public function __construct(Editora $editora){
-    	$this->editora = $editora;
+    public function __construct(Editora $context){
+    	$this->context = $context;
     }
 
     public function index(){
-    	return $this->editora->all();
+		$result = $this->context->all();
+		
+		if ( $result && !empty($result) && count($result) > 0 ) {
+			return $result;
+		}
+		return $this->getMessageReturn("error", "não possui registros!", null, null );	
     }
 
     public function store(Request $request){
@@ -27,22 +32,34 @@ class EditoraController extends Controller
     	$validator = Validator::make(
     		$request->all(),
     		[
-    			'name' => 'required',
-    			'email' => 'email|unique:editoras'
+    			'nome' => 'required',
+    			'email' => 'required|email|unique:editoras',
+				'telefone' => 'required|min:8'
     		]
 
     	);
 
-    	if(!$validator->fails()){
-    		$editora = $this->editora->create($request->all());
-			return $this->getMessageReturn("success", "adicionada com sucesso", $editora->nome );
-    	}
-		return $this->getMessageReturn("error", "não adicionada, verifique!.", null );
+    	if($validator->fails()){
+    		return $validator->errors();			
+		}
+		
+		$result = $this->context->create($request->all());
+		
+		if ( $result ) {
+			return $this->getMessageReturn("success", "inserida com sucesso!", $result, $result["nome"] );			
+		} 
+		
+		return $this->getMessageReturn("error", "não foi inserida, verifique!", null, null );			
     }
 
 
     public function show($id){
-    	return $this->editora->find($id);
+		$result = $this->context->find($id);
+		if ( $result ) {
+			return $this->getMessageReturn("success", "localizado", $result, $result["nome"]);			
+		}
+		
+		return $this->getMessageReturn("error", "não localizada", null, $id);			
     }
 
     public function update(Request $request, $id){
@@ -50,26 +67,44 @@ class EditoraController extends Controller
 		$validator = Validator::make(
     		$request->all(),
     		[
-    			'name' => 'required',    
-    			'email' => 'email|unique:editoras'.$id
+    			'nome' => 'required',    
+    			'email' => 'required|email|unique:editoras'.$id,
+				'telefone' => 'required|min:8'
     		]
     	);
 
-    	if(!$validator->fails()){
-    		$editora = $this->editora->update($request->all());
-			return $this->getMessageReturn("success", "atualizada com sucesso", $editora->nome );
-    	}
-
-		return $this->getMessageReturn("error", "não foi atualizada, verifique!", null );
+		if ( $validator->fails() ) {
+			return $validator->errors();			
+		} 
+				
+		if ( $this->context->find($id) ) {
+			$result = $this->context->update($request->all());
+		}
+		
+		return $result;
+		
+		if ( $result ) {
+			return $this->getMessageReturn("success", "atualizada com sucesso!", $result, $result["nome"] );			
+		} 
+		
+		return $this->getMessageReturn("error", "não foi atualizada, verifique!", $result, null );								
     }
 
     public function destroy($id){
-    	$editoras = $this->editora->find($id);
-    	if($editoras->delete()){
-    		return $this->getMessageReturn("success", "deletada com sucesso!", $editora->nome );
-    	}
-
-		return $this->getMessageReturn("error", "não foi deletada, verifique!", null );
+		$result = $this->context->find($id);
+		
+		if ( $result ) {
+			$nome = $result->nome;
+			
+			if ( $result->delete() ){ 
+				return $this->getMessageReturn("success", "excluída com sucesso!", null, $nome);			
+			} 
+			
+			return $this->getMessageReturn("error", "não foi possível excluir, verifique!", null, $id);			
+		}
+		
+		return $this->getMessageReturn("error", "não foi localizada!", null, $id);			
+		
     }
 }
 	
