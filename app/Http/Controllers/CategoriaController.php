@@ -19,7 +19,11 @@ class CategoriaController extends Controller
 	}
 	
 	public function index(){
-		return $this->context->all();
+		$result = $this->context->all();
+		if ( $result && !empty($result) && count($result) > 0 ) {
+			return $result;
+		}
+		return $this->getMessageReturn("error", "não possui registros!", null, null );			
 	}
 	
 	public function store(Request $request){		
@@ -35,34 +39,32 @@ class CategoriaController extends Controller
 			return $validator->errors();			
 		};		
 				
-		$resposta = $this->context->create($request->all());
+		$result = $this->context->create($request->all());
 		
-		if ( $resposta ) {
-			return $this->getMessageReturn("success", "inserida com sucesso!", $resposta, $resposta["nome"] );			
+		if ( $result ) {
+			return $this->getMessageReturn("success", "inserida com sucesso!", $result, $result["nome"] );			
 		} 
 		
-		return $this->getMessageReturn("error", "não foi inserida, verifique!", $resposta, null );			
-		
+		return $this->getMessageReturn("error", "não foi inserida, verifique!", null, null );
 	}	
 	
 	public function show($id){			
-		
-		$categoria = $this->categoria->find($id);
-		
-		if ( !categoria ) {
-			return $this->getMessageReturn("error", "não foi localizada!", null, $id);			
+				
+		$result = $this->context->find($id);
+		if ( $result ) {
+			return $this->getMessageReturn("success", "localizada", $result, $result["nome"]);			
 		}
+		
+		return $this->getMessageReturn("error", "não localizada", null, $id);			
 
-		return $categoria;
 	}
 	
-	public function update(Request $request){
-		
+	public function update(Request $request, $id){
+				
 		$validator = Validator::make(
 			$request->all(), 
 			[
-				'id' => 'required|numeric',
-				'nome' => 'required|min:5|max:40'
+				'nome' => 'required|min:5|max:40',
 			]
 		);
 		
@@ -70,39 +72,31 @@ class CategoriaController extends Controller
 			return $validator->errors();			
 		} 
 				
-		$id = $request->input("id");
-		$nome = $request->input("nome");	
-				
-		$categoria = $this->categoria->find($id);
+		$result = $this->context->find($id);
+		$result = $result->update($request->all());
 		
-		if ( $categoria ) {
-			
-			if ( $categoria->update(["nome" => $nome]) ) {
-				return $this->getMessageReturn("success", "atualizada com sucesso!", $nome);			
-			} 
-
-			return $this->getMessageReturn("error", "não foi atualizada, verifique!", $id);			
-
+		if ( $result ) {
+			return $this->getMessageReturn("success", "atualizada com sucesso!", $result, $result["nome"] );			
 		} 
 		
-		return $this->getMessageReturn("error", "não foi localizada", $id);									
+		return $this->getMessageReturn("error", "não foi atualizada, verifique!", $result, null );								
 	}
 		
 	public function destroy($id){
 		
-		$categoria = $this->categoria->find($id);
-
-		if ( $categoria ) {
-			$nome = $categoria->nome;
+		$result = $this->context->find($id);
+		
+		if ( $result ) {
+			$nome = $result->nome;
 			
-			if ( $categoria->delete() ){ 
-				return $this->getMessageReturn("success", "excluída com sucesso!", $nome);			
+			if ( $result->delete() ){ 
+				return $this->getMessageReturn("success", "excluída com sucesso!", null, $nome);			
 			} 
 			
-			return $this->getMessageReturn("error", "não foi possível excluir, verifique!", $id);			
+			return $this->getMessageReturn("error", "não foi possível excluir, verifique!", null, $id);			
 		}
 		
-		return $this->getMessageReturn("error", "não foi localizada!", $id);			
+		return $this->getMessageReturn("error", "não foi localizada!", null, $id);			
 		
 	}
 		
