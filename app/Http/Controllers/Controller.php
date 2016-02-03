@@ -16,30 +16,32 @@ class Controller extends BaseController
 	 * sendo parametrizável para qualque tipo de retorno, atráves dos parametros recebidos;
 	 * $tipo = Tipo de mensagem de retorno, "sucess" ou "error"; ( obrigatório )
 	 * $mensagem = Mensagem que será retornada; ( obrigatório )
-	 * $objeto = Objeto retornado nos metodos de persistencia ( opcional )
+	 * $retorno = Retorno dos metodos de persistencia ( opcional )
 	 * $nome = Nome do registro que está sendo manipulado ( opcional ) 
 	 * Por: Fábio Moura, em 31/01/2016
 	 **/
-	public function getMessageReturn($tipo, $mensagem, $objeto, $nome){
+	public function getMessageReturn($tipo, $mensagem, $retorno, $nome){
 		
-		$retorno = array();	
+		$resposta = array();	
 		
 		if ( !$tipo || !$mensagem ) {
-			array_push( $retorno, ["Não foi possível montar a mensagem de retorno, Controller.getMessageReturn()"] );
-			return $retorno;
+			array_push( $resposta, ["Não foi possível montar a mensagem de retorno, Controller.getMessageReturn()"] );
+			return $resposta;
 		}
 		
-		array_push( $retorno, $tipo );
+		array_push( $resposta, $tipo );
 		
 		if ( $mensagem && $nome ) {
-			array_push( $retorno, $this->CLASS_NAME." '".$nome."' ".$mensagem );							
+			array_push( $resposta, $this->CLASS_NAME." '".$nome."' ".$mensagem );							
 		} else if ( $mensagem ) {
-			array_push( $retorno, $this->CLASS_NAME." ".$mensagem );							
+			array_push( $resposta, $this->CLASS_NAME." ".$mensagem );							
+		} 
+		if ( $retorno ) {
+			array_push( $resposta, $retorno );	
 		} 
 		
-		array_push( $retorno, $objeto );
 		
-		return $retorno;
+		return $resposta;
 	
 	}	
 }
