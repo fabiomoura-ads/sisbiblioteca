@@ -68,26 +68,23 @@ class EditoraController extends Controller
     		$request->all(),
     		[
     			'nome' => 'required',    
-    			'email' => 'required|email|unique:editoras'.$id,
+    			'email' => 'required|email|unique:editoras,email,'.$id,
 				'telefone' => 'required|min:8'
     		]
     	);
-
+		
 		if ( $validator->fails() ) {
 			return $validator->errors();			
 		} 
-				
-		if ( $this->context->find($id) ) {
-			$result = $this->context->update($request->all());
-		}
-		
-		return $result;
-		
+			
+		$result = $this->context->find($id);
+						
 		if ( $result ) {
+			$result->update($request->all()); 				
 			return $this->getMessageReturn("success", "atualizada com sucesso!", $result, $result["nome"] );			
 		} 
 		
-		return $this->getMessageReturn("error", "não foi atualizada, verifique!", $result, null );								
+		return $this->getMessageReturn("error", "não foi atualizada, verifique!", null, null );								
     }
 
     public function destroy($id){
