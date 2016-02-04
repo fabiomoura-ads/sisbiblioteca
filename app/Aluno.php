@@ -11,7 +11,7 @@ class Aluno extends Model
      *
      * @var array
      */
-	public $timestamps = false;
+	//public $timestamps = false;
 	
     protected $fillable = [
         'matricula', 'nome', 'email', 'telefone', 'status',
