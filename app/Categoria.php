@@ -11,6 +11,7 @@ class Categoria extends Model
      *
      * @var array
      */
+	protected $table = 'categorias';
     protected $fillable = [
         'nome', 
     ];
