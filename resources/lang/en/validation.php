@@ -94,22 +94,26 @@ return [
         ],
 		'id' => [
 			'required' => 'A informação id é obrigatório, verifique!',
-			'numeric' => 'A informação id deve ser um número, verifique!',
+			'numeric' => 'A informação id deve ser um número, verifique!'
 		],	
 		'nome' => [
 			'required' => 'O campo nome é obrigatório, verifique!',
 			'min' => 'O campo nome deve ter pelo menos :min caracteres, verifique!',
-			'max' => 'O campo nome deve ter no máximo :max caracteres, verifique!',
+			'max' => 'O campo nome deve ter no máximo :max caracteres, verifique!'
 		],
 		'email' => [
 			'required' => 'O campo email é obrigatório, verifique!',
 			'unique' => 'O email informado já existe cadastrado, verifique!',
-			'email' => 'O email informado não é um endereço de email válido, verifique!',
+			'email' => 'O email informado não é um endereço de email válido, verifique!'
 		],		
 		'telefone' => [
 			'required' => 'O campo telefone é obrigatório!',
-			'min' => 'O campo telefone deve ter pelo menos :min caracteres, verifique!',
-		],		
+			'min' => 'O campo telefone deve ter pelo menos :min caracteres, verifique!'
+		],	
+		'matricula' => [
+			'required' => 'A matricula do aluno é obrigatório, verifique!',
+			'unique' => 'Matrícula já cadastrada, verifique!'
+		],
     ],
 
     /*
