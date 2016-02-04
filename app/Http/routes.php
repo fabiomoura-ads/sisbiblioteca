@@ -22,6 +22,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 	Route::resource("locacao", "LocacaoController");
 	Route::resource("editora", "EditoraController");
 	Route::resource("aluno", "AlunoController");
+	Route::resource("livro", "LivroController");
 	Route::resource("categoria", "CategoriaController");
 });
 
