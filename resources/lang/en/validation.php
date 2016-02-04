@@ -114,6 +114,22 @@ return [
 			'required' => 'A matricula do aluno é obrigatório, verifique!',
 			'unique' => 'Matrícula já cadastrada, verifique!'
 		],
+		'titulo' => [
+			'required' => 'O título do livro é obrigatório, verifique!'
+		],
+		'autor' => [
+			'required' => 'O autor do livro é obrigatório, verifique!'
+		],
+		'codigo' => [
+			'required' => 'O código do livro é obrigatório, verifique!',
+			'unique' => 'O código informado já existe cadastrado, verifique'
+		],
+		'editora_id' => [
+			'required' => 'O vinculo com uma editora é obrigatório, verifique!'
+		],
+		'categoria_id' => [
+			'required' => 'O vínculo com uma categoria é obrigatório, verifique!'
+		]
     ],
 
     /*
