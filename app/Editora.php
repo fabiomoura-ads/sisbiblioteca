@@ -19,4 +19,8 @@ class Editora extends Model
     protected $hidden = [
         
     ];
+
+    public function livros(){
+        return $this->hasMany('App\Livro');
+    }
 }

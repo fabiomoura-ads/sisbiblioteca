@@ -23,4 +23,12 @@ class Livro extends Model
     protected $hidden = [
         
     ];
+
+    public function editoras(){
+        return $this->belongsTo('App\Editora', 'editora_id');
+    }
+
+    public function categorias(){
+        return $this->belongsTo('App\Categoria', 'categoria_id');
+    }
 }

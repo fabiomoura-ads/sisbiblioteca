@@ -23,4 +23,6 @@ class Locacao extends Model
     protected $hidden = [
         
     ];
+
+    
 }

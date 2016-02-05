@@ -12,18 +12,25 @@
 */
 
 Route::get('/', function () {
-    $users = DB::table("users")->get();
-	return $users;
+    return 'Welcome';
 });
 
-Route::get('/users', "UserController@getAll" );
 
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
-	Route::resource("locacao", "LocacaoController");
-	Route::resource("editora", "EditoraController");
-	Route::resource("aluno", "AlunoController");
-	Route::resource("livro", "LivroController");
-	Route::resource("categoria", "CategoriaController");
+	Route::post('authenticate', 'UserController@authenticate');
+	
+	Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
+
+		Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
+		
+		Route::resource('authenticate', 'UserController', ['only' => ['index']]);
+		Route::resource("locacao", "LocacaoController");
+		Route::resource("editora", "EditoraController");
+		Route::resource("aluno", "AlunoController");
+		Route::resource("livro", "LivroController");
+		Route::resource("categoria", "CategoriaController");
+
+	});
 });
 
 /*
@@ -36,6 +43,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 | kernel and includes session state, CSRF protection, and more.
 |
 */
+
 
 Route::group(['middleware' => ['web']], function () {
     //
