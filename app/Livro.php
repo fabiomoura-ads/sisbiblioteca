@@ -31,4 +31,9 @@ class Livro extends Model
     public function categorias(){
         return $this->belongsTo('App\Categoria', 'categoria_id');
     }
+	
+    public function locacoes(){
+        return $this->hasMany('App\Locacao');
+    }	
+
 }
