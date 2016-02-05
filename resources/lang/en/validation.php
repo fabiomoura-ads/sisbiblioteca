@@ -129,7 +129,19 @@ return [
 		],
 		'categoria_id' => [
 			'required' => 'O vínculo com uma categoria é obrigatório, verifique!'
-		]
+		],
+		'livro_id' => [
+			'required' => 'O vínculo com um livro é obrigatório, verifique!'
+		],
+		'aluno_id' => [
+			'required' => 'O vínculo com um aluno é obrigatório, verifique!'
+		],
+		'data_locacao' => [
+			'required' => 'A data de locação deve ser informada, verifique!'
+		],	
+		'data_devolucao' => [
+			'required' => 'A data de devolução deve ser informada, verifique!'
+		]				
     ],
 
     /*
