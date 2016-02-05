@@ -11,6 +11,7 @@ class Locacao extends Model
      *
      * @var array
      */
+	protected $table = "locacoes";
     protected $fillable = [
         'aluno_id', 'livro_id', 'data_locacao', 'data_devolucao', 'status', 
     ];
@@ -23,6 +24,14 @@ class Locacao extends Model
     protected $hidden = [
         
     ];
+	
+	public function alunos(){
+		return $this->hasOne("App\Aluno");
+	}
+	
+	public function livros(){
+		return $this->hasOne("App\Livro");
+	}
 
     
 }
