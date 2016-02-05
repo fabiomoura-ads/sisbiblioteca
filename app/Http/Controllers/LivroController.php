@@ -26,10 +26,7 @@ class LivroController extends Controller
 	
     public function index(){
 		
-		$result = Livro::with('categorias')->get();
-		$result = Livro::with('editoras')->get();
-		
-		//$result = $this->context->all();
+		$result = $this->context->with('categorias')->with('editoras')->get();
 		
 		if ( $result && !empty($result) && count($result) > 0 ) {
 			return $result;
@@ -86,10 +83,11 @@ class LivroController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-				
-		$result = $this->context->find($id);
+		
+		$result = $this->context->with('categorias')->with('editoras')->find($id);
+		
 		if ( $result ) {
-			return $this->getMessageReturn("success", "localizado", $result, $result["nome"]);			
+			return $this->getMessageReturn("success", "localizado", $result, null);			
 		}
 		
 		return $this->getMessageReturn("error", "não localizado", null, $id);
