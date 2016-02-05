@@ -12,7 +12,7 @@ class Livro extends Model
      * @var array
      */
     protected $fillable = [
-        'codigo', 'titulo', 'editora_id', 'categoria_id', 'autor', 'descricao', 'num_pag'
+        'codigo', 'titulo','autor', 'descricao', 'num_pag'
     ];
 
     /**
@@ -21,7 +21,7 @@ class Livro extends Model
      * @var array
      */
     protected $hidden = [
-        
+		 'editora_id', 'categoria_id', 	'created_at', 'updated_at',
     ];
 
     public function editoras(){
