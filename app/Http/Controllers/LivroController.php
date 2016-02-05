@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Livro;
 use Validator;
+use App\Categoria;
 
 class LivroController extends Controller
 {
@@ -24,7 +25,12 @@ class LivroController extends Controller
 	}
 	
     public function index(){
-		$result = $this->context->all();
+		
+		$result = Livro::with('categorias')->get();
+		$result = Livro::with('editoras')->get();
+		
+		//$result = $this->context->all();
+		
 		if ( $result && !empty($result) && count($result) > 0 ) {
 			return $result;
 		}
@@ -80,7 +86,7 @@ class LivroController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-		
+				
 		$result = $this->context->find($id);
 		if ( $result ) {
 			return $this->getMessageReturn("success", "localizado", $result, $result["nome"]);			
