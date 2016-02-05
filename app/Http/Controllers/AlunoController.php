@@ -65,7 +65,7 @@ class AlunoController extends Controller
 		$result = $this->context->create($request->all());
 		
 		if ( $result ) {
-			return $this->getMessageReturn("success", "inserida com sucesso!", $result, $result["nome"] );			
+			return $this->getMessageReturn("success", "inserido com sucesso!", $result, $result["nome"] );			
 		} 
 		
 		return $this->getMessageReturn("error", "não foi inserido, verifique!", null, null );		
