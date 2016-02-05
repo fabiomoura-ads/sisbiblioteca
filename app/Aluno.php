@@ -25,4 +25,8 @@ class Aluno extends Model
     protected $hidden = [
 		'created_at', 'updated_at',
     ];
+	
+	public function locacoes(){
+		return $this->hasMany("App\Locacao", "");
+	}
 }
