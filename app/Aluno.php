@@ -29,4 +29,8 @@ class Aluno extends Model
 	public function locacoes(){
 		return $this->hasMany("App\Locacao", "");
 	}
+	
+	public function scopeActive($query){
+		return $query->where("status", 1);
+	}	
 }
