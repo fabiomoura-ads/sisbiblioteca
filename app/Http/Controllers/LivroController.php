@@ -35,7 +35,8 @@ class LivroController extends Controller
 				'titulo' => 'required',
 				'autor' => 'required',
 				'categoria_id' => 'required',
-				'editora_id' => 'required'
+				'editora_id' => 'required'	
+				
 			]
 		);
 		
