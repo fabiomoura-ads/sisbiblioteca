@@ -19,15 +19,14 @@ class CategoriaController extends Controller
 	}
 	
 	public function index(){
-		$result = $this->context->all();
-		if ( $result && !empty($result) && count($result) > 0 ) {
-			return $result;
-		}
-		return $this->getMessageReturn("error", "não possui registros!", null, null );			
+		$op = "S";
+		$result = $this->context->all();		
+		return $this->getMessageReturn($result, $op);	
 	}
 	
 	public function store(Request $request){		
-
+		$op = "I";	
+		
 		$validator = Validator::make(
 			$request->all(), 
 			[
@@ -38,29 +37,20 @@ class CategoriaController extends Controller
 		if ( $validator->fails() ) {
 			return $validator->errors();			
 		};		
-				
-		$result = $this->context->create($request->all());
 		
-		if ( $result ) {
-			return $this->getMessageReturn("success", "inserida com sucesso!", $result, $result["nome"] );			
-		} 
-		
-		return $this->getMessageReturn("error", "não foi inserida, verifique!", null, null );
+		$result = $this->context->create($request->all());		
+		return $this->getMessageReturn($result, $op);			
 	}	
 	
 	public function show($id){			
-				
-		$result = $this->context->find($id);
-		if ( $result ) {
-			return $this->getMessageReturn("success", "localizada", $result, $result["nome"]);			
-		}
-		
-		return $this->getMessageReturn("error", "não localizada", null, $id);			
-
+		$op = "S";		
+		$result = $this->context->find($id);		
+		return $this->getMessageReturn($result, $op);		
 	}
 	
 	public function update(Request $request, $id){
-				
+		$op = "U";	
+		
 		$validator = Validator::make(
 			$request->all(), 
 			[
@@ -70,34 +60,22 @@ class CategoriaController extends Controller
 		
 		if ( $validator->fails() ) {
 			return $validator->errors();			
-		} 
-				
+		}; 	
+		
 		$result = $this->context->find($id);
-		$result = $result->update($request->all());
-		
-		if ( $result ) {
-			return $this->getMessageReturn("success", "atualizada com sucesso!", $result, $result["nome"] );			
-		} 
-		
-		return $this->getMessageReturn("error", "não foi atualizada, verifique!", $result, null );								
+		if ( $result ){
+			$result = $result->update($request->all());			
+		}		
+		return $this->getMessageReturn($result, $op);									
 	}
 		
 	public function destroy($id){
-		
+		$op = "D";	
 		$result = $this->context->find($id);
-		
 		if ( $result ) {
-			$nome = $result->nome;
-			
-			if ( $result->delete() ){ 
-				return $this->getMessageReturn("success", "excluída com sucesso!", null, $nome);			
-			} 
-			
-			return $this->getMessageReturn("error", "não foi possível excluir, verifique!", null, $id);			
-		}
-		
-		return $this->getMessageReturn("error", "não foi localizada!", null, $id);			
-		
+			$result = $result->delete();	
+		}		
+		return $this->getMessageReturn($result, $op);										
 	}
 		
 }
