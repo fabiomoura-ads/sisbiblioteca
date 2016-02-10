@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Parametro extends Model
@@ -12,8 +13,9 @@ class Parametro extends Model
      * @var array
      */
 	protected $table = "parametros";
+
     protected $fillable = [
-        'parametro', 'qtd', 'user_id', 'observacao'
+        'parametro', 'qtd', 'observacao'
     ];
 
     /**
@@ -24,5 +26,13 @@ class Parametro extends Model
     protected $hidden = [
 		
     ];
+	
+	public static function getQtdLocacaoPorAluno(){
+		return DB::table("parametros")->where("parametro", "qtd_locacao_por_aluno")->value("qtd");
+	}
+	
+	public static function getPrazoDevolucao(){
+		return DB::table("parametros")->where("parametro", "prazo_devolucao")->value("qtd");
+	}	
 	
 }
