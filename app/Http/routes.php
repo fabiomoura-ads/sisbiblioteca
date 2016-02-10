@@ -12,26 +12,25 @@
 */
 
 Route::get('/', function () {
-    return 'Welcome';
+    return 'Welcome';	
 });
 
-Route::get("/aluno/active", "AlunoController@active");
-
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
-	//Route::post('authenticate', 'UserController@authenticate');
+	Route::post('authenticate', 'UserController@authenticate');
 	
-	//Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
+	Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
 
-		//Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
+		Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
 		
-		//Route::resource('authenticate', 'UserController', ['only' => ['index']]);
+		Route::resource('authenticate', 'UserController', ['only' => ['index']]);
 		Route::resource("locacao", "LocacaoController");
 		Route::resource("editora", "EditoraController");
 		Route::resource("aluno", "AlunoController");
 		Route::resource("livro", "LivroController");
 		Route::resource("categoria", "CategoriaController");
+		Route::resource("parametro", "ParametroController");
 
-	//});
+	});
 });
 
 /*
