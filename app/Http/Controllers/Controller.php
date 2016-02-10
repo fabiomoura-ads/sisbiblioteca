@@ -19,9 +19,15 @@ class Controller extends BaseController
 	 * @return: Array $resposta;
 	 * @author: Fábio Moura, em 31/01/2016
 	 **/	
-	public function getMessageReturn($result, $identificadorOperacao ){
+	public function getMessageReturn($result, $identificadorOperacao, $mensagem, $tipo ){
 		
-		$resposta = array();	
+		$resposta = array();
+
+		if ( $mensagem && $tipo ) {			
+			array_push( $resposta, $tipo, $mensagem );
+			return $resposta;
+		}	
+		
 		$operacao = $this->getTipoOperacao($identificadorOperacao);
 		
 		if ( $result && !empty($result) && count($result) > 0 ) {

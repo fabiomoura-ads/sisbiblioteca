@@ -22,7 +22,7 @@ class LivroController extends Controller
     public function index(){
 		$op = "S";
 		$result = $this->context->with('categorias')->with('editoras')->get();		
-		return $this->getMessageReturn($result, $op);		
+		return $this->getMessageReturn($result, $op, null, null);		
     }
 
     public function store(Request $request) {
@@ -45,13 +45,13 @@ class LivroController extends Controller
 		}
 		
 		$result = $this->context->create($request->all());		
-		return $this->getMessageReturn($result, $op);	
+		return $this->getMessageReturn($result, $op, null, null);	
     }
 
     public function show($id) {
 		$op = "S";
 		$result = $this->context->with('categorias')->with('editoras')->find($id);
-		return $this->getMessageReturn($result, $op);
+		return $this->getMessageReturn($result, $op, null, null);
     }
 
     public function update(Request $request, $id) {
@@ -76,7 +76,7 @@ class LivroController extends Controller
 		if ( $result ){
 			$result = $result->update($request->all());			
 		}	
-		return $this->getMessageReturn($result, $op);
+		return $this->getMessageReturn($result, $op, null, null);
     }
 
     public function destroy($id) {
@@ -86,6 +86,6 @@ class LivroController extends Controller
 		if ( $result ) {
 			$result = $result->delete();	
 		}				
-		return $this->getMessageReturn($result, $op);		
+		return $this->getMessageReturn($result, $op, null, null);		
     }
 }
