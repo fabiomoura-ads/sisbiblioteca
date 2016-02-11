@@ -10,17 +10,16 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
 Route::get('/', function () {
     return 'Welcome';	
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
-	Route::post('authenticate', 'UserController@authenticate');
+	//Route::post('authenticate', 'UserController@authenticate');
 	
-	Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
+	//Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
 
-		Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
+		//Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
 		
 		Route::resource('authenticate', 'UserController', ['only' => ['index']]);
 		Route::resource("locacao", "LocacaoController");
@@ -30,7 +29,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 		Route::resource("categoria", "CategoriaController");
 		Route::resource("parametro", "ParametroController");
 
-	});
+	//});
 });
 
 /*
