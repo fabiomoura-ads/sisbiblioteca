@@ -32,5 +32,6 @@ class Locacao extends Model
 	
 	public function livros(){
 		return $this->belongsTo("App\Livro", "livro_id");
-	}    
+	}   
+
 }
