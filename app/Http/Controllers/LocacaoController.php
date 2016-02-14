@@ -22,6 +22,7 @@ class LocacaoController extends Controller
 	protected $context;
 	protected $CLASS_NAME = "Locacao";
 	protected $parametros;
+	protected $statusDaLocacao = array(0 /* Locado */, 1 /*Devolvido */ );
 	
 	public function __construct(Locacao $context){
 		$this->context = $context;
@@ -38,14 +39,15 @@ class LocacaoController extends Controller
 		$result = null;		
 		
 		$podeLocar = $this->alunoPodeLocar($request);
-		
+				
 		if ( $podeLocar ) {
 			
 			$validator = Validator::make(
 				$request->all(),
 				[
 					'aluno_id' => 'required',
-					'livro_id' => 'required'				]
+					'livro_id' => 'required'			
+				]
 			);
 					
 			if ( $validator->fails() ) {
@@ -114,6 +116,7 @@ class LocacaoController extends Controller
 		$this->parametros->getParametrizacao();
 		
 		$qtdLocado = 0;
+		$status = 0;
 		
 		$aluno = $request->input("aluno_id");
 		$qtdParaLocacao = $request->input("qtd");
@@ -122,18 +125,18 @@ class LocacaoController extends Controller
 			return false;
 		} 
 		
-		$result = $this->context->where("aluno_id", $aluno)->where("status", 0 /* livro locado */ )->get();
-		
+		$result = $this->getLocacoesDoAluno($aluno, $status, null, null);
+
 		if ( $result && count($result) > 0 ) {
 
 			//quantidade de livros alugados pelo aluno
 			$qtdLocado = count($result);		
 		}
-		
+						
 		//quantidade disponivel é a quantidade parametrizada - quantidade alugada, 
 		$qtdDisponivelParaLocacao = ( $this->parametros->QTD_LOCACAO_POR_ALUNO - $qtdLocado );			
 				
-		//se a quantidade disponível for > 1, entra no if, senão retorna false, informando que o aluno ja está no limite de aluguel;
+		//se a quantidade disponível for >= 1, entra no if, senão retorna false, informando que o aluno ja está no limite de aluguel;
 		if ( $qtdDisponivelParaLocacao ){
 							
 			//a quantidade para locação deve ser menor ou igual a quantidade disponivel para locação;
@@ -143,6 +146,41 @@ class LocacaoController extends Controller
 		} 						
 				
 		return false;
+	}
+	
+	/**
+	 * Método getLocacoesDoAluno() criado para retornar as locações de um aluno especifico, 
+	 * podendo ser filtrado por status da locação e também um período específico da locação
+	 * @param: $aluno -> id do aluno ( required );
+	 * @param: $statusLocacao -> status da locação, 0 = Locado, 1 = Devolvido;
+	 * @param: $iniico e $fim -> filtro de periodo da data da locação
+	 * @return: $result -> Array de resposta, vazio;
+     * @author: Fábio Moura
+	 * @date: 13/02/2015
+	 **/
+	public function getLocacoesDoAluno($aluno, $statusLocacao, $inicio, $fim){
+		$functionName = "LocacaoController->getLocacoesDoAluno()";
+				
+		$whereExpress = "";
+		if ( $aluno ) {
+						
+			if ( in_array($statusLocacao, $this->statusDaLocacao, true) && $inicio && $fim ) {
+				
+				return $this->context->where("aluno_id", $aluno)->where("status", $statusLocacao )->whereBetween('data_locacao', [$inicio, $fim] )->get();
+			} 
+			
+			if ( in_array($statusLocacao, $this->statusDaLocacao, true) ) {
+				return $this->context->where("aluno_id", $aluno)->where("status", $statusLocacao )->get();
+			}
+
+			if ( $inicio && $fim ) {
+				return $this->context->where("aluno_id", $aluno)->whereBetween('data_locacao', [$inicio, $fim] )->get();
+			}		
+	 
+			return $this->getMessageReturn(null, null, "Ocorreu um erro ao executar o método $functionName", "error");		
+		} 
+		
+		return $this->getMessageReturn(null, null, "Para chamada do método $functionName é necessario informar o id do aluno a ser pesquisado", "error");				
 	}
 	
 	public function geraDatasLocacaoDevolucao( $request ){	
