@@ -15,8 +15,13 @@ class Controller extends BaseController
 	 * Método getMessageReturn() foi criado para encapsular a montagem das respostas 
 	 * dos Controllers para a view. Recebe um array com o resultado e um identificador 
 	 * da operação realizada. E retornará um array resposta, com informações para view;
-	 * @params: Array $result, String $identificadorOperacao;
-	 * @return: Array $resposta;
+	 * @param: $result - Array, com o resutado da operação,
+	 * @param: $identificadorOperacao - String, um identificador da action executada,
+	 * @param: $mensagem - String, mensagem alternativa para resposta,
+	 * @param: $tipo - String, tipo alternativo para resposta à view; 
+	 * @return: Array $resposta ['tipo', 'mensagem', 'resultado'];
+	 * @exemple1: ['success', 'registro inserido com sucesso', { id:1, nome:teste } ];
+	 * @exemple2: ['error', 'não foi inserido'];
 	 * @author: Fábio Moura, em 31/01/2016
 	 **/	
 	public function getMessageReturn($result, $identificadorOperacao, $mensagem, $tipo ){
