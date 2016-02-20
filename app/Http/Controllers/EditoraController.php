@@ -21,7 +21,8 @@ class EditoraController extends Controller
     public function index(){
 		$op = "S";
 		$result = $this->context->all();		
-		return $this->getMessageReturn($result, $op, null, null);	
+		return $result;
+		//return $this->getMessageReturn($result, $op, null, null);	
     }
 
     public function store(Request $request){
@@ -38,11 +39,14 @@ class EditoraController extends Controller
     	);
 
     	if($validator->fails()){
-    		return $validator->errors();			
+    		//return $validator->errors();			
+    		return response()->json(['error' => $validator->errors()], 401);
 		}
 		
 		$result = $this->context->create($request->all());		
-		return $this->getMessageReturn($result, $op, null, null);				
+		//return $this->getMessageReturn($result, $op, null, null);
+		return $result;		
+
     }
 
     public function show($id){
