@@ -11,6 +11,7 @@ use App\Livro;
 use App\Aluno;
 use App\Parametro;
 use Validator;
+use Datetime;
 
 /**
  * 0 = Livro Alugado
@@ -20,9 +21,8 @@ class LocacaoController extends Controller
 {
 	protected $context;
 	protected $CLASS_NAME = "Locacao";
-	protected $QTD_LOCACAO_POR_ALUNO;	
-	protected $PRAZO_DEVOLUCAO;	
-	
+	protected $parametros;
+	protected $statusDaLocacao = array(0 /* Locado */, 1 /*Devolvido */ );
 	
 	public function __construct(Locacao $context){
 		$this->context = $context;
@@ -37,7 +37,8 @@ class LocacaoController extends Controller
     public function store(Request $request){
 		$op = "I";		
 		$result = null;		
-		$podeLocar = $this->alunoPodeLocar($request->input("qtd"));
+		
+		$podeLocar = $this->alunoPodeLocar($request);
 				
 		if ( $podeLocar ) {
 			
@@ -45,17 +46,19 @@ class LocacaoController extends Controller
 				$request->all(),
 				[
 					'aluno_id' => 'required',
-					'livro_id' => 'required'				]
+					'livro_id' => 'required'			
+				]
 			);
 					
 			if ( $validator->fails() ) {
 				return $validator->errors();
 			}
-		
-			$request = $this->geraDatasDaLocacao($request);
-			
+									
+			$request = $this->geraDatasLocacaoDevolucao($request);
 			$result = $this->context->create($request->all());
-			
+			if ( $result && $result["id"] ) {
+				return $this->show($result["id"]);
+			}			
 		} 
 		
 		return $this->getMessageReturn($result, $op, null, null);
@@ -74,9 +77,7 @@ class LocacaoController extends Controller
 			$request->all(),
 			[
 				'aluno_id' => 'required',
-				'livro_id' => 'required',
-				//'data_locacao' => 'required',
-				//'data_devolucao' => 'required'		
+				'livro_id' => 'required'
 			]
 		);
 		
@@ -109,28 +110,37 @@ class LocacaoController extends Controller
 	 * @return boolean;
 	 * @author Fábio Moura, em 09/02/2016
 	 **/
-	public function alunoPodeLocar( $qtdParaLocacao ){		
+	public function alunoPodeLocar( $request ){		
+				
+		$this->parametros = new Parametro();		
+		$this->parametros->getParametrizacao();
 		
-		$this->carregaParametros();
 		$qtdLocado = 0;
+		$status = 0;
 		
-		$result = $this->context->where("aluno_id", 1)->where("status", 0 /* locado */ )->get();
+		$aluno = $request->input("aluno_id");
+		$qtdParaLocacao = $request->input("qtd");
+				
+		if ( !$aluno || !$qtdParaLocacao ) {
+			return false;
+		} 
 		
+		$result = $this->getLocacoesDoAluno($aluno, $status, null, null);
+
 		if ( $result && count($result) > 0 ) {
 
 			//quantidade de livros alugados pelo aluno
 			$qtdLocado = count($result);		
 		}
-		
+						
 		//quantidade disponivel é a quantidade parametrizada - quantidade alugada, 
-		$qtdDisponivelParaLocacao = ( $this->QTD_LOCACAO_POR_ALUNO - $qtdLocado );			
-		
-		//se a quantidade disponível for > 1, entra no if, senão retorna false, informando que o aluno ja está no limite de aluguel;
+		$qtdDisponivelParaLocacao = ( $this->parametros->QTD_LOCACAO_POR_ALUNO - $qtdLocado );			
+				
+		//se a quantidade disponível for >= 1, entra no if, senão retorna false, informando que o aluno ja está no limite de aluguel;
 		if ( $qtdDisponivelParaLocacao ){
-					
+							
 			//a quantidade para locação deve ser menor ou igual a quantidade disponivel para locação;
 			if ( $qtdParaLocacao <= $qtdDisponivelParaLocacao ) {
-				//return $qtdDisponivelParaLocacao;			
 				return true;
 			}			
 		} 						
@@ -138,31 +148,58 @@ class LocacaoController extends Controller
 		return false;
 	}
 	
-	public function geraDatasDaLocacao( $request ){
-		$hoje = new Date();
-		$dia = $hoje("d"); 
-		$dia = $hoje("d");
-		$dia = $hoje("d");		
-	}
 	/**
-	 * Método para carregar os parametros gravados, caso não exista, configura
-	 * valores default;
-	 * @author: Fábio Moura, em 09/02/2016
+	 * Método getLocacoesDoAluno() criado para retornar as locações de um aluno especifico, 
+	 * podendo ser filtrado por status da locação e também um período específico da locação
+	 * @param: $aluno -> id do aluno ( required );
+	 * @param: $statusLocacao -> status da locação, 0 = Locado, 1 = Devolvido;
+	 * @param: $iniico e $fim -> filtro de periodo da data da locação
+	 * @return: $result -> Array de resposta, vazio;
+     * @author: Fábio Moura
+	 * @date: 13/02/2015
 	 **/
-	public function carregaParametros(){
+	public function getLocacoesDoAluno($aluno, $statusLocacao, $inicio, $fim){
+		$functionName = "LocacaoController->getLocacoesDoAluno()";
 				
-		if ( !$this->QTD_LOCACAO_POR_ALUNO ) {
-			$this->QTD_LOCACAO_POR_ALUNO = Parametro::getQtdLocacaoPorAluno();	
-			if ( !$this->QTD_LOCACAO_POR_ALUNO ) {
-				$this->QTD_LOCACAO_POR_ALUNO = 2;
+		$whereExpress = "";
+		if ( $aluno ) {
+						
+			if ( in_array($statusLocacao, $this->statusDaLocacao, true) && $inicio && $fim ) {
+				
+				return $this->context->where("aluno_id", $aluno)->where("status", $statusLocacao )->whereBetween('data_locacao', [$inicio, $fim] )->get();
+			} 
+			
+			if ( in_array($statusLocacao, $this->statusDaLocacao, true) ) {
+				return $this->context->where("aluno_id", $aluno)->where("status", $statusLocacao )->get();
 			}
+
+			if ( $inicio && $fim ) {
+				return $this->context->where("aluno_id", $aluno)->whereBetween('data_locacao', [$inicio, $fim] )->get();
+			}		
+	 
+			return $this->getMessageReturn(null, null, "Ocorreu um erro ao executar o método $functionName", "error");		
 		} 
-				
-		if ( !$this->PRAZO_DEVOLUCAO ) {
-			$this->PRAZO_DEVOLUCAO = Parametro::getPrazoDevolucao();
-			if ( !$this->PRAZO_DEVOLUCAO ) {
-				$this->PRAZO_DEVOLUCAO = 7;
-			}
-		}
+		
+		return $this->getMessageReturn(null, null, "Para chamada do método $functionName é necessario informar o id do aluno a ser pesquisado", "error");				
 	}
+	
+	public function geraDatasLocacaoDevolucao( $request ){	
+								
+		$dataLocacao = new DateTime(date("Y-m-d"));
+		$dataDevolucao = new DateTime(date("Y-m-d"));
+
+		$dataDevolucao->modify("+".$this->parametros->PRAZO_DEVOLUCAO." days");	
+						
+		//se o prazo tiver caido no sabado ou domingo, incrementa pra cair em um dia útil;		
+		while( $dataDevolucao->format("w") == 0 /* Domingo */ || $dataDevolucao->format("w") == 6 /* Sábado */ ) {
+			$dataDevolucao->modify("+1 day");		
+		}
+		
+		//carrega as informações das datas de locação e devolução no request para criação da locação;
+		$request->merge( array( 'data_locacao' => $dataLocacao->format("Y-m-d") ));	
+		$request->merge( array( 'data_devolucao' => $dataDevolucao->format("Y-m-d") ));
+
+		return $request;
+	}
+
 }

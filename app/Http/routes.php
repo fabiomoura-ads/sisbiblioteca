@@ -10,18 +10,26 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
 Route::get('/', function () {
     return 'Welcome';	
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
+<<<<<<< HEAD
 
 	Route::post('authenticate', 'UserController@authenticate');	
+=======
+	//Route::post('authenticate', 'UserController@authenticate');
+>>>>>>> 4dc1a5ed69ac11a69016e9a480415cfe9b1ee39d
 	
-	Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
+	//Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
 
+<<<<<<< HEAD
 		Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
+=======
+		//Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
+		
+>>>>>>> 4dc1a5ed69ac11a69016e9a480415cfe9b1ee39d
 		Route::resource('authenticate', 'UserController', ['only' => ['index']]);
 		Route::resource("locacao", "LocacaoController");
 		Route::resource("editora", "EditoraController");
@@ -30,7 +38,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 		Route::resource("categoria", "CategoriaController");
 		Route::resource("parametro", "ParametroController");
 
-	});
+	//});
 });
 
 /*
