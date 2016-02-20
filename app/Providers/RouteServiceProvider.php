@@ -27,6 +27,8 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot($router);
+		//testando injeção de dependencia no request - fabiomoura 
+		$router->model("categoria", "App\Categoria");
     }
 
     /**
