@@ -6,25 +6,34 @@
 	</div>
 	<div class="col-md-8">
 		<div class="text-right">
-		<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-model="editora.novo()">Novo</button>
+      <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">Cadastrar</button>
 		</div>
 	</div>
 </div>
 
-
+<br>
 <table class="table table-hover">
 	<tr>
-		<td>ID</td>
-		<td>EDITORA</td>
-		<td>AÇÕES</td>
+		<td>Id</td>
+		<td>Nome</td>
+    <td>Telefone</td>
+    <td>E-mail</td>
+		<td>Ações</td>
 	</tr>
-	<tr ng-repeat="editora in editora.editoras" >
+	<tr ng-repeat="editora in editora.editoras | filter: query" >
 		<td>{{editora.id}}</td>
-		<td>{{editora.nome}}</td>
-		<td>AÇÕES</td>
+		<td>
+      <a href="" ng-click="editora.edit(editora.id)">{{editora.nome}}</a>
+    </td>
+    <td>{{editora.telefone}}</td>
+    <td>{{editora.email}}</td>
+		<td>
+      <a href="" ng-click="editora.delete(editora.id, $index)">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      </a>
+    </td>
 	</tr>
 </table>
-
 
 
 <!-- Modal -->
@@ -37,9 +46,30 @@
       </div>
       <div class="modal-body">
         <form>
-        	<div class="form-group">
-        		<input type="text" class="form-control" ng-model="editora.name" placeholder="Nome" />
-        	</div>
+          <div class="row">
+            <div class="col-md-6">
+            	<div class="form-group">
+            		<input type="text" class="form-control" ng-model="editora.nome" placeholder="Nome" />
+            	</div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" ng-model="editora.telefone" placeholder="Telefone" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" ng-model="editora.email" ng-blur="editora.validation()" placeholder="Email" />
+          </div>
+
+          <div ng-if="vm.errors">
+            <ul>
+              <li ng-repeat="error in editora.errors">
+                {{error}}
+              </li>
+            </ul>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">

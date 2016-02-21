@@ -14,7 +14,7 @@ angular.module('frontendApp')
       'AngularJS',
       'Karma'
     ];
-
+    $rootScope.loading = true;
     var vm = this;
 
     vm.loginError = false;
@@ -97,6 +97,7 @@ angular.module('frontendApp')
             });
         }
 
+        $rootScope.loading = false;
 
 
 
