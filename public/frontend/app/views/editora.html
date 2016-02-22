@@ -20,15 +20,15 @@
     <td>E-mail</td>
 		<td>Ações</td>
 	</tr>
-	<tr ng-repeat="editora in editora.editoras | filter: query" >
-		<td>{{editora.id}}</td>
+	<tr ng-repeat="editoras in editora.editoras | filter: query" >
+		<td>{{editoras.id}}</td>
 		<td>
-      <a href="" ng-click="editora.edit(editora.id)">{{editora.nome}}</a>
+      <a  data-toggle="modal" data-target="#myModal" href="" ng-click="editora.edit(editoras.id)">{{editoras.nome}}</a>
     </td>
-    <td>{{editora.telefone}}</td>
-    <td>{{editora.email}}</td>
+    <td>{{editoras.telefone}}</td>
+    <td>{{editoras.email}}</td>
 		<td>
-      <a href="" ng-click="editora.delete(editora.id, $index)">
+      <a href="" ng-click="editora.delete(editoras.id, $index)">
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
       </a>
     </td>

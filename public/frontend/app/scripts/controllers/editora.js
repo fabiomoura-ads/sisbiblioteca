@@ -17,6 +17,7 @@ angular.module('frontendApp')
 
     $rootScope.loading = true;
     var vm = this;
+    
     vm.editoras;
     vm.pageTitle = 'Cadastrar nova editora';
     
@@ -47,20 +48,17 @@ angular.module('frontendApp')
         telefone: vm.telefone,
         email: vm.email
       })
-      .then(function(status, response){
-        console.log(status);
+      .then(function(response){
         vm.editoras.push(response.data);
-
         toastr.success('Editora '+ response.data.nome + ' inserida.', 'Sucesso');
         vm.clear();
       }, function(response){
-        
         vm.error = response.data;
         console.log(vm.error);
-        
+
         $.each(vm.error, function(key, item) {
           $.each(item, function(nome, msg) {
-            toastr.error(nome+': '+msg, 'Erro');
+            toastr.error(msg, 'Erro');
           });
         });
 
@@ -69,6 +67,28 @@ angular.module('frontendApp')
 
     vm.validation = function(){
       
+    }
+
+    vm.edit = function(id){
+      $http.get(api+'/api/editora/'+id)
+      .then(function(response){
+        vm.nome = response.data.nome;
+        vm.telefone = response.data.telefone;
+        vm.email = response.data.email;
+        vm.pageTitle = 'Editar Editora';
+      }, function(response){
+        toastr.error('Erro ao recuperar Editora.','Erro');
+      });
+    }
+
+    vm.delete = function(id, index){
+      $http.delete(api+'/api/editora/'+id)
+        .then(function(response){
+          toastr.info('Editora '+ response.data.nome + ' removida.','Informação');
+          vm.editoras.splice(index, 1);
+        },function(response){
+
+      });
     }
 
  });
