@@ -23,7 +23,8 @@ angular
     'ui.router',
     'satellizer',
     'toastr',
-    'flow'
+    'flow',
+    'angularUtils.directives.dirPagination'
   ])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $provide){ 
 
