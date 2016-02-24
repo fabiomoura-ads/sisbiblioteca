@@ -34,6 +34,18 @@
         opacity: 0.9;
         margin: 5% auto;
       }
+      .header{
+        background-color: #3c8dbc;
+        color: #FFF;
+      }
+      .navbar a{
+        color: #FFF;
+      }
+      .navbar-nav li a:hover{
+        background: none;
+        font-weight: bold;
+      }
+      
     </style>
   </head>
   <body ng-app="frontendApp">
@@ -45,9 +57,10 @@
     <div ng-if="loading" class="loading">
       <img src="images/loading.gif" alt="loading">
     </div>
+
     <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
+      <div class="navbar" role="navigation">
+        <div class="container-fluid">
           <div class="navbar-header">
 
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
@@ -73,10 +86,10 @@
                 </ul>
               </li>
               <li><a href="#/livro">Alunos</a></li>
-
               
               <li ng-if="authenticated"><a ng-href="#/logout">Sair</a></li>
             </ul>
+            
           </div>
         </div>
       </div>
