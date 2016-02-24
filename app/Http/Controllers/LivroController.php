@@ -37,7 +37,7 @@ class LivroController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return Response::json($validator->errors(), 401);
+			return response()->json(['error' => [ $validator->errors()->first() ] ], 401);
 		}
 		
 		$result = $this->context->create($request->all());
@@ -64,7 +64,7 @@ class LivroController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return Response::json($validator->errors(), 401);
+			return response()->json(['error' => [ $validator->errors()->first() ] ], 401);
 		}
 		
 		$result = $this->context->find($id);

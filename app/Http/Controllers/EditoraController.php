@@ -26,13 +26,13 @@ class EditoraController extends Controller
     		$request->all(),
     		[
     			'nome' => 'required',
-    			'email' => 'email|unique:editoras'
+    			'email' => 'required|email|unique:editoras'
     		]
 
     	);
 
-    	if($validator->fails()){
-    		return response()->json(['error' => $validator->errors()], 401);
+    	if($validator->fails()){		
+    		return response()->json(['error' => [ $validator->errors()->first() ] ], 401);
 		}
 		$result = $this->context->create($request->all());		
 		return $result;		
@@ -52,7 +52,7 @@ class EditoraController extends Controller
     	);
 		
 		if ( $validator->fails() ) {
-			return response()->json(['error' => $validator->errors()], 401);
+			return response()->json(['error' => [$validator->errors()->first()]], 401);
 		} 
 		$result = $this->context->find($id);						
 
@@ -64,11 +64,11 @@ class EditoraController extends Controller
 
     public function destroy($id){
 		$result = $this->context->find($id);
-		if ( $result ) {
+		if ( $result ) {			
 			$result->delete();	
 			return $result;
 		}				
-		return response()->json(['error' => 'Erro ao remover editora.'], 401);
+		return response()->json(['error' => ['Erro ao remover editora.']], 401);
     }
 }
 	

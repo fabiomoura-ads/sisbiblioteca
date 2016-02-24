@@ -30,8 +30,8 @@ class CategoriaController extends Controller
 			]
 		);
 		
-		if ( $validator->fails() ) {
-			return Response::json($validator->errors(), 401);			
+		if ( $validator->fails() ) {	
+			return response()->json($validator->errors(), 401);
 		};		
 		
 		$result = $this->context->create($request->all());		
@@ -51,7 +51,7 @@ class CategoriaController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return Response::json($validator->errors(), 401);			
+			return response()->json($validator->errors(), 401);
 		}; 	
 		
 		$result = $this->context->find($id);
@@ -64,10 +64,12 @@ class CategoriaController extends Controller
 		
 	public function destroy($id){
 		$result = $this->context->find($id);
+		
 		if ($result) {
 			$result->delete();	
 		}
 		return $result;
+		
 	}
 		
 }
