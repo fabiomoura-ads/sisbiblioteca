@@ -25,7 +25,8 @@ angular
     'toastr',
     'flow',
     'angularUtils.directives.dirPagination',
-    'ui.mask'
+    'ui.mask',
+    'ngMask'
   ])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $provide){ 
 
