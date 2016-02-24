@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name frontendApp.controller:LivroCtrl
+ * @name frontendApp.controller:AlunoCtrl
  * @description
- * # LivroCtrl
+ * # AlunoCtrl
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LivroCtrl', function (toastr, $scope, $http, $rootScope) {
+  .controller('AlunoCtrl', function (toastr, $scope, $http, $rootScope) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -19,7 +19,7 @@ angular.module('frontendApp')
     var vm = this;
     
     vm.categorias;
-    vm.pageTitle = 'Cadastrar Livro';
+    vm.pageTitle = 'Cadastrar nova categoria';
     
     vm.nome;
     vm.telefone;
@@ -30,19 +30,11 @@ angular.module('frontendApp')
 
     vm.clear = function(){
       vm.nome = null;
+      vm.email = null;
+      vm.telefone = null;
     }
 
-    $http.get(api+'/api/livro')
-    .then(function(response){
-    	console.log(response.data);
-    	vm.livros = response.data;
-      $rootScope.loading = false;
-    },function(response){
-    	vm.error = response.data;
-  	});
-
-    //Get all Categoria
-  	$http.get(api+'/api/categoria')
+    $http.get(api+'/api/categoria')
     .then(function(response){
     	console.log(response.data);
     	vm.categorias = response.data;
@@ -51,26 +43,12 @@ angular.module('frontendApp')
     	vm.error = response.data;
   	});
 
-  	//Get all Editora
-  	$http.get(api+'/api/editora')
-    .then(function(response){
-    	console.log(response.data);
-    	vm.editoras = response.data;
-      $rootScope.loading = false;
-    },function(response){
-    	vm.error = response.data;
-  	});
-
     vm.store = function(){
       if(vm.update){
         vm.categoria = $.param({
-              codigo: vm.codigo,
-              titulo: vm.titulo,
-              autor: vm.autor,
-              categoria: vm.categoria,
-              editora: vm.editora,
+              nome: vm.nome,
         });
-        $http.put(api+'/api/livro/' + vm.id, {
+        $http.put(api+'/api/categoria/' + vm.id, {
           nome: vm.nome,
         })
           .then(function(response){
@@ -90,18 +68,12 @@ angular.module('frontendApp')
             });
           });
         } else {
-        	//Create
-        	alert(vm.editora);
-          $http.post(api+'/api/livro', {
-            codigo: vm.codigo,
-            titulo: vm.titulo,
-            autor: vm.autor,
-            categoria_id: vm.categoria,
-            editora_id: vm.editora,
+          $http.post(api+'/api/categoria', {
+            nome: vm.nome
           })
           .then(function(response){
-            vm.livros.push(response.data);
-            toastr.success('Livro '+ response.data.titulo + ' inserido.', 'Sucesso');
+            vm.categorias.push(response.data);
+            toastr.success('Categoria '+ response.data.nome + ' inserida.', 'Sucesso');
             vm.clear();
           }, function(response){
             vm.error = response.data;
@@ -123,20 +95,13 @@ angular.module('frontendApp')
     }
 
     vm.edit = function(id, index){
-      $http.get(api+'/api/livro/'+id)
+      $http.get(api+'/api/categoria/'+id)
       .then(function(response){
         vm.id = id;
-        
-        vm.codigo = response.data.codigo;
-        vm.titulo = response.data.titulo;
-        vm.autor = response.data.autor;
-        vm.categoria = response.data.categoria;
-        vm.editora = response.data.editora;
-
+        vm.nome = response.data.nome;
         vm.index = index;
-        vm.pageTitle = 'Editar Livro';
+        vm.pageTitle = 'Editar Categoria';
         vm.update = true;
-
       }, function(response){
         toastr.error('Erro ao recuperar Editora.','Erro');
       });

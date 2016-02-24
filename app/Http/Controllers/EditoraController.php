@@ -26,8 +26,7 @@ class EditoraController extends Controller
     		$request->all(),
     		[
     			'nome' => 'required',
-    			'email' => 'required|email|unique:editoras',
-				'telefone' => 'required|min:8'
+    			'email' => 'email|unique:editoras'
     		]
 
     	);
@@ -48,8 +47,7 @@ class EditoraController extends Controller
     		$request->all(),
     		[
     			'nome' => 'required',    
-    			'email' => 'required|email|unique:editoras,email,'.$id,
-				'telefone' => 'required|min:8'
+    			'email' => 'email|unique:editoras,email,'.$id
     		]
     	);
 		

@@ -9,25 +9,21 @@ use App\Http\Controllers\Controller;
 use App\Livro;
 use Validator;
 use App\Categoria;
+use Response;
 
 class LivroController extends Controller
 {
 	protected $context;
-	protected $CLASS_NAME = "Livro";
 	
 	public function __construct(Livro $context){
 		$this->context = $context;
 	}
 	
     public function index(){
-		$op = "S";
-		$result = $this->context->with('categorias')->with('editoras')->get();		
-		return $this->getMessageReturn($result, $op, null, null);		
+		return $this->context->with('categorias')->with('editoras')->get();		
     }
 
     public function store(Request $request) {
-		$op = "I";
-		
         $validator = Validator::make(
 			$request->all(),
 			[
@@ -41,22 +37,21 @@ class LivroController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();
+			return Response::json($validator->errors(), 401);
 		}
 		
-		$result = $this->context->create($request->all());		
-		return $this->getMessageReturn($result, $op, null, null);	
+		$result = $this->context->create($request->all());
+		return $result->with('categorias')->with('editoras')->get();		
+		
     }
 
     public function show($id) {
-		$op = "S";
-		$result = $this->context->with('categorias')->with('editoras')->find($id);
-		return $this->getMessageReturn($result, $op, null, null);
+		return $this->context->with('categorias')->with('editoras')->find($id);
+		
     }
 
     public function update(Request $request, $id) {
-		$op = "U";
-		
+	
         $validator = Validator::make(
 			$request->all(),
 			[
@@ -69,23 +64,23 @@ class LivroController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();
+			return Response::json($validator->errors(), 401);
 		}
 		
 		$result = $this->context->find($id);
 		if ( $result ){
-			$result = $result->update($request->all());			
+			$result->update($request->all());			
 		}	
-		return $this->getMessageReturn($result, $op, null, null);
+
+		return $result;
+		
     }
 
     public function destroy($id) {
-		$op = "D";
-		
 		$result = $this->context->find($id);
 		if ( $result ) {
-			$result = $result->delete();	
+			$result->delete();	
 		}				
-		return $this->getMessageReturn($result, $op, null, null);		
+		return $result;
     }
 }

@@ -37,13 +37,15 @@ angular.module('frontendApp')
             }, function(error) {
                 vm.loginError = true;
                 vm.loginErrorText = error.data.error;
-
+                toastr.error('Usuário ou Senha incorretos', 'Erro');
             // Because we returned the $http.get request in the $auth.login
             // promise, we can chain the next promise to the end here
             }).then(function(response) {
 
                 // Stringify the returned data to prepare it
                 // to go into local storage
+                
+                console.log(response.data.user);
                 var user = JSON.stringify(response.data.user);
 
                 // Set the stringified user data into local storage

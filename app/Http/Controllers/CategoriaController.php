@@ -8,74 +8,66 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Validator;
 use App\Categoria;
+use Response;
 
 class CategoriaController extends Controller
 {	
 	protected $context;
-	protected $CLASS_NAME = "Categoria";
-	
+		
 	public function __construct(Categoria $context){
 		$this->context = $context;
 	}
 	
 	public function index(){
-		$op = "S";
-		$result = $this->context->all();		
-		return $this->getMessageReturn($result, $op, null, null);	
+		return $this->context->all();		
 	}
 	
 	public function store(Request $request){		
-		$op = "I";	
-		
 		$validator = Validator::make(
 			$request->all(), 
 			[
-				'nome' => 'required|min:5'
+				'nome' => 'required|unique:categorias|min:5'
 			]
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();			
+			return Response::json($validator->errors(), 401);			
 		};		
 		
 		$result = $this->context->create($request->all());		
-		return $this->getMessageReturn($result, $op, null, null);			
+		return $result;
 	}	
 	
 	public function show($id){			
-		$op = "S";		
-		$result = $this->context->find($id);		
-		return $this->getMessageReturn($result, $op, null, null);		
+		return $this->context->find($id);		
 	}
 	
 	public function update(Request $request, $id){
-		$op = "U";	
-		
 		$validator = Validator::make(
 			$request->all(), 
 			[
-				'nome' => 'required|min:5|max:40',
+				'nome' => 'required|unique:categorias|min:5|max:40'.$id
 			]
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();			
+			return Response::json($validator->errors(), 401);			
 		}; 	
 		
 		$result = $this->context->find($id);
 		if ( $result ){
-			$result = $result->update($request->all());			
-		}		
-		return $this->getMessageReturn($result, $op, null, null);									
+			$result->update($request->all());			
+		}
+
+		return $result;
 	}
 		
 	public function destroy($id){
-		$op = "D";	
 		$result = $this->context->find($id);
-		if ( $result ) {
-			$result = $result->delete();	
-		}		
-		return $this->getMessageReturn($result, $op, null, null);										
+		if ($result) {
+			$result->delete();	
+		}
+		return $result;
 	}
 		
 }
