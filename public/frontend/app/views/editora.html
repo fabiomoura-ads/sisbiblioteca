@@ -23,7 +23,7 @@
 	<tr dir-paginate="editoras in editora.editoras | itemsPerPage: 2 | filter: query">
 		<td>{{editoras.id}}</td>
 		<td>
-      <a  data-toggle="modal" data-target="#myModal" href="" ng-click="editora.edit(editoras.id)">{{editoras.nome}}</a>
+      <a  data-toggle="modal" data-target="#myModal" href="" ng-click="editora.edit(editoras.id, $index)">{{editoras.nome}}</a>
     </td>
     <td>{{editoras.telefone}}</td>
     <td>{{editoras.email}}</td>

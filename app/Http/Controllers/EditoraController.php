@@ -12,22 +12,16 @@ use App\Editora;
 class EditoraController extends Controller
 {
     protected $context;
-	protected $CLASS_NAME = "Editora";
-
+    
     public function __construct(Editora $context){
     	$this->context = $context;
     }
 
     public function index(){
-		$op = "S";
-		$result = $this->context->all();		
-		return $result;
-		//return $this->getMessageReturn($result, $op, null, null);	
+		return $this->context->all();		
     }
 
     public function store(Request $request){
-    	$op = "I";
-		
     	$validator = Validator::make(
     		$request->all(),
     		[
@@ -39,26 +33,18 @@ class EditoraController extends Controller
     	);
 
     	if($validator->fails()){
-    		//return $validator->errors();			
     		return response()->json(['error' => $validator->errors()], 401);
 		}
-		
 		$result = $this->context->create($request->all());		
-		//return $this->getMessageReturn($result, $op, null, null);
 		return $result;		
-
     }
 
     public function show($id){
-		$op = "S";		
-		$result = $this->context->find($id);
-		return $this->getMessageReturn($result, $op, null, null);			
+		return $this->context->find($id);
     }
 
     public function update(Request $request, $id){
-		$op = "U";
-		
-		$validator = Validator::make(
+        $validator = Validator::make(
     		$request->all(),
     		[
     			'nome' => 'required',    
@@ -68,14 +54,14 @@ class EditoraController extends Controller
     	);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();			
+			return response()->json(['error' => $validator->errors()], 401);
 		} 
-			
 		$result = $this->context->find($id);						
+
 		if ( $result ){
-			$result = $result->update($request->all());			
-		}	
-		return $this->getMessageReturn($result, $op, null, null);		
+			$result->update($request->all());
+		}
+        return $this->context->find($id);
     }
 
     public function destroy($id){
