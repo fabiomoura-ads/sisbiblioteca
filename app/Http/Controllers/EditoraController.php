@@ -79,14 +79,12 @@ class EditoraController extends Controller
     }
 
     public function destroy($id){
-		$op = "D";
-		
 		$result = $this->context->find($id);
-		
 		if ( $result ) {
-			$result = $result->delete();	
+			$result->delete();	
+			return $result;
 		}				
-		return $this->getMessageReturn($result, $op, null, null);					
+		return response()->json(['error' => 'Erro ao remover editora.'], 401);
     }
 }
 	

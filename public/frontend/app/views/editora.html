@@ -20,7 +20,7 @@
     <td>E-mail</td>
 		<td>Ações</td>
 	</tr>
-	<tr ng-repeat="editoras in editora.editoras | filter: query" >
+	<tr dir-paginate="editoras in editora.editoras | itemsPerPage: 2 | filter: query">
 		<td>{{editoras.id}}</td>
 		<td>
       <a  data-toggle="modal" data-target="#myModal" href="" ng-click="editora.edit(editoras.id)">{{editoras.nome}}</a>
@@ -34,7 +34,7 @@
     </td>
 	</tr>
 </table>
-
+<dir-pagination-controls></dir-pagination-controls>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
