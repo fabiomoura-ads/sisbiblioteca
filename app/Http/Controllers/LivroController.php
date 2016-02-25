@@ -32,7 +32,6 @@ class LivroController extends Controller
 				'autor' => 'required',
 				'categoria_id' => 'required',
 				'editora_id' => 'required'	
-				
 			]
 		);
 		
@@ -41,7 +40,7 @@ class LivroController extends Controller
 		}
 		
 		$result = $this->context->create($request->all());
-		return $result->with('categorias')->with('editoras')->get();		
+		return $result;
 		
     }
 

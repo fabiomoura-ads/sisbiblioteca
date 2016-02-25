@@ -26,8 +26,7 @@ angular
     'flow',
     'angularUtils.directives.dirPagination',
     'ui.mask',
-    'ngMask',
-    'angularChart'
+    'ngMask'
 
   ])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $provide){ 

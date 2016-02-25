@@ -109,6 +109,7 @@ angular.module('frontendApp')
             vm.livros.push(response.data);
             toastr.success('Livro '+ response.data.titulo + ' inserido.', 'Sucesso');
             vm.clear();
+            $("#myModal").modal('hide');
           }, function(response){
             vm.error = response.data;
             console.log(vm.error);
