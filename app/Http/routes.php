@@ -15,7 +15,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
-		
+
 		Route::post('authenticate', 'UserController@authenticate');	
 		
 		Route::group(['middleware' => 'jwt.auth', ['except' => ['authenticate']]], function(){
@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
 			Route::get('authenticate/user', 'UserController@getAuthenticatedUser');
 			Route::resource('authenticate', 'UserController', ['only' => ['index']]);
 
+			Route::get('main', 'MainController@index');
 			Route::resource("locacao", "LocacaoController");
 			Route::resource("editora", "EditoraController");
 			Route::resource("aluno", "AlunoController");

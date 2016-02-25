@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/toastr/toastr.css" />
     <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+    <link rel="stylesheet" href="bower_components/c3/c3.css" />
+    
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -132,9 +134,21 @@
               </li>
               <li><a href="#/livro">Alunos</a></li>
               
-              <li ng-if="authenticated"><a ng-href="#/logout">Sair</a></li>
+              
             </ul>
             
+            <ul class="nav navbar-nav navbar-right">
+            
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Seja bem-vindo, <strong>{{user.name}}</strong> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Alterar Senha</a></li>
+                <li role="separator" class="divider"></li>
+                <li ng-if="authenticated"><a ng-href="#/logout">Sair</a></li>
+              </ul>
+            </li>
+          </ul>
+
           </div>
         </div>
       </div>
@@ -185,6 +199,9 @@
     <script src="bower_components/angularUtils-pagination/dirPagination.js"></script>
     <script src="bower_components/angular-ui-mask/dist/mask.js"></script>
     <script src="bower_components/ngMask/dist/ngMask.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/c3/c3.js"></script>
+    <script src="bower_components/angular-chart/angular-chart.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

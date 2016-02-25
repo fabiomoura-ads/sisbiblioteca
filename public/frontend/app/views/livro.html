@@ -1,9 +1,16 @@
 <h3>Livros</h3>
 <div class="row">
-	<div class="col-md-4">
-		<input class="form-control" type="text" ng-model="query" placeholder="Pesquisar"  autofocus>
-	</div>
 	<div class="col-md-8">
+		<form class="form-inline">
+			<div class="form-group">
+				<input class="form-control" type="text" ng-model="query" placeholder="000-00-000-0000-0" mask="999-99-999-9999-9"  autofocus>
+			</div>
+			<div class="form-group">
+				<input class="form-control" type="text" ng-model="query1" placeholder="Título, Autor, Categoria..."  autofocus>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-4">
 	<div class="text-right">
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
 		  Cadastrar
@@ -22,7 +29,7 @@
 		<td>Categoria</td>
 		<td>Editora</td>
 	</tr>
-	<tr dir-paginate="livros in livro.livros | itemsPerPage: 10 | filter: query">
+	<tr dir-paginate="livros in livro.livros | itemsPerPage: 10 | filter: query | filter: query1">
 		<td>{{livros.id}}</td>
 		<td>
       		<a data-toggle="modal" data-target="#myModal" href="" ng-click="livro.edit(livros.id, $index)">{{livros.codigo}}</a>
@@ -51,7 +58,10 @@
       <div class="modal-body">
         <form>
 			<div class="form-group">
-				<input class="form-control" type="text" ng-model="livro.codigo" placeholder="Código ISBN" />
+				<div class="input-group">
+					<div class="input-group-addon">ISBN</div>
+					<input class="form-control" type="text" ng-model="livro.codigo" mask="999-99-999-9999-9" placeholder="978-85-333-0227-3" />
+				</div>
 			</div>
 			<div class="form-group">
 				<input class="form-control" type="text" ng-model="livro.titulo" placeholder="Título" />

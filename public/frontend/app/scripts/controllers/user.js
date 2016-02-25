@@ -14,7 +14,9 @@ angular.module('frontendApp')
       'AngularJS',
       'Karma'
     ];
+
     $rootScope.loading = true;
+
     var vm = this;
 
     vm.loginError = false;
@@ -50,7 +52,8 @@ angular.module('frontendApp')
 
                 // Set the stringified user data into local storage
                 localStorage.setItem('user', user);
-
+                
+                
                 // The user's authenticated state gets flipped to
                 // true so we can now show parts of the UI that rely
                 // on the user being logged in

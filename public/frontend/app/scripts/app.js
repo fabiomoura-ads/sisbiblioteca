@@ -26,7 +26,9 @@ angular
     'flow',
     'angularUtils.directives.dirPagination',
     'ui.mask',
-    'ngMask'
+    'ngMask',
+    'angularChart'
+
   ])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $provide){ 
 
@@ -169,14 +171,16 @@ angular
       // $stateChangeStart is fired whenever the state changes. We can use some parameters
       // such as toState to hook into details about the state as it is changing
       $rootScope.$on('$stateChangeStart', function(event, toState) {
-  
+        
         // Grab the user from local storage and parse it to an object
         var user = JSON.parse(localStorage.getItem('user'));            
         // If there is any user data in local storage then the user is quite
         // likely authenticated. If their token is expired, or if they are
         // otherwise not actually authenticated, they will be redirected to
         // the auth state because of the rejected request anyway
+        $rootScope.user = user;
         if(user) {
+
           // The user's authenticated state gets flipped to
           // true so we can now show parts of the UI that rely
           // on the user being logged in

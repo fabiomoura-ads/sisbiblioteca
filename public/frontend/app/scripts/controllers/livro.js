@@ -18,18 +18,19 @@ angular.module('frontendApp')
     $rootScope.loading = true;
     var vm = this;
     
+    vm.livros;
     vm.categorias;
+    vm.editoras;
     vm.pageTitle = 'Cadastrar Livro';
     
-    vm.nome;
-    vm.telefone;
-    vm.email;
     vm.update = false;
 
     vm.erros;
 
     vm.clear = function(){
-      vm.nome = null;
+      vm.codigo = null;
+      vm.titulo = null;
+      vm.autor = null;
     }
 
     $http.get(api+'/api/livro')
@@ -63,22 +64,28 @@ angular.module('frontendApp')
 
     vm.store = function(){
       if(vm.update){
-        vm.categoria = $.param({
+        vm.livro = $.param({
               codigo: vm.codigo,
               titulo: vm.titulo,
               autor: vm.autor,
-              categoria: vm.categoria,
-              editora: vm.editora,
+              categoria_id: vm.categoria,
+              editora_id: vm.editora,
         });
+
         $http.put(api+'/api/livro/' + vm.id, {
-          nome: vm.nome,
+            codigo: vm.codigo,
+            titulo: vm.titulo,
+            autor: vm.autor,
+            categoria_id: vm.categoria,
+            editora_id: vm.editora
         })
           .then(function(response){
             console.log(response.data);
-            vm.categorias.splice(vm.index, 1);
-            vm.categorias.push(response.data);
-            toastr.info('Editora '+ response.data.nome + ' atualizada.', 'Sucesso');
+            vm.livros.splice(vm.index, 1);
+            vm.livros.push(response.data);
+            toastr.info('Livro '+ response.data.titulo + ' atualizada.', 'Sucesso');
             vm.clear();
+            $("#myModal").modal('hide');
             vm.update = false;
           }, function(response){
             vm.error = response.data;
@@ -91,7 +98,6 @@ angular.module('frontendApp')
           });
         } else {
         	//Create
-        	alert(vm.editora);
           $http.post(api+'/api/livro', {
             codigo: vm.codigo,
             titulo: vm.titulo,
@@ -138,15 +144,15 @@ angular.module('frontendApp')
         vm.update = true;
 
       }, function(response){
-        toastr.error('Erro ao recuperar Editora.','Erro');
+        toastr.error('Erro ao recuperar Livro.','Erro');
       });
     }
 
     vm.delete = function(id, index){
-      $http.delete(api+'/api/categoria/'+id)
+      $http.delete(api+'/api/livro/'+id)
         .then(function(response){
-          toastr.info('Categoria '+ response.data.nome + ' removida.','Informação');
-          vm.categorias.splice(index, 1);
+          toastr.info('Livro '+ response.data.titulo + ' removida.','Informação');
+          vm.livros.splice(index, 1);
         },function(response){
 
       });
