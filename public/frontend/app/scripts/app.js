@@ -24,11 +24,13 @@ angular
     'satellizer',
     'toastr',
     'flow',
-    'angularUtils.directives.dirPagination'
+    'angularUtils.directives.dirPagination',
+    'ui.mask'
   ])
   .config(function ($stateProvider, $urlRouterProvider, $authProvider, $httpProvider, $provide){ 
 
       function redirectWhenLoggedOut($q, $injector) {
+        
         return {
           responseError: function(rejection) {
             // Need to use $injector.get to bring in $state or else we get
@@ -43,27 +45,33 @@ angular
             angular.forEach(rejectionReasons, function(value, key) {
 
               if(rejection.data.error === value) {
+
                 // If we get a rejection corresponding to one of the reasons
                 // in our array, we know we need to authenticate the user so 
                 // we can remove the current user from local storage
-                $rootScope.authenticated = false;
                 localStorage.removeItem('user');
+
                 // Send the user to the auth state so they can login
                 $state.go('login');
               }
             });
+
             return $q.reject(rejection);
           }
         }
       }
+      //EndredirectWhenLoggedOut
+
       // Setup for the $httpInterceptor
       $provide.factory('redirectWhenLoggedOut', redirectWhenLoggedOut);
       // Push the new factory onto the $http interceptor array
       $httpProvider.interceptors.push('redirectWhenLoggedOut');
+
       $authProvider.loginUrl = api+'/api/authenticate';
 
       $urlRouterProvider.otherwise('/');
 
+  //stateProvider
   $stateProvider
     .state('main', {
       url: '/',
@@ -89,6 +97,22 @@ angular
         loginRequired: loginRequired
       }
     })
+    .state('categoria', {
+      url: '/categoria',
+      templateUrl: 'views/categoria.html',
+      controller: 'CategoriaCtrl as categoria',
+      resolve: {
+        loginRequired: loginRequired
+      }
+    })
+    .state('livro', {
+      url: '/livro',
+      templateUrl: 'views/livro.html',
+      controller: 'LivroCtrl as livro',
+      resolve: {
+        loginRequired: loginRequired
+      }
+    })
     .state('login', {
       url: '/login',
       templateUrl: 'views/user.html',
@@ -106,6 +130,7 @@ angular
       }
     });
 
+    //SkipIfLoggedIn
     function skipIfLoggedIn($q, $auth) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) {
@@ -115,19 +140,22 @@ angular
       }
       return deferred.promise;
     }
-
+    //loginRequired
     function loginRequired($q, $location, $auth, $rootScope) {
       var deferred = $q.defer();
       if ($auth.isAuthenticated()) {
         //if($rootScope.authenticated){
         deferred.resolve();
       } else {
+        $rootScope.authenticated = false;
+        localStorage.removeItem('user');
         $location.path('/login');
       }
       return deferred.promise;
     }
+    //End
   
-  }).run(function($rootScope, $state) {
+}).run(function($rootScope, $state) {
 
       // $stateChangeStart is fired whenever the state changes. We can use some parameters
       // such as toState to hook into details about the state as it is changing
@@ -158,5 +186,6 @@ angular
             $state.go('users');
           }       
         }
+
       });
 });

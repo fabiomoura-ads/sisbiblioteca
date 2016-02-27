@@ -8,24 +8,21 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Aluno;
 use Validator;
+use Response;
 
 class AlunoController extends Controller
 {
 	protected $context;
-	protected $CLASS_NAME = "Aluno";
 	
 	public function __construct(Aluno $context){
 		$this->context = $context;
 	}
 	
     public function index(){
-		$op = "S";
-		$result = $this->context->all();
-		return $this->getMessageReturn($result, $op, null, null);
+		return $this->context->all();
     }
     
     public function store(Request $request) {
-		$op = "I";
 		
         $validator = Validator::make(
 			$request->all(),
@@ -37,23 +34,18 @@ class AlunoController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();
+			return Response::json($validator->errors(), 401);
 		}
 		
 		$result = $this->context->create($request->all());		
-		return $this->getMessageReturn($result, $op, null, null);
+		return $result;
     }
 
     public function show($id) {
-		$op = "S";		
-		$result = $this->context->find($id);
-		return $this->getMessageReturn($result, $op);
-		
+		return $this->context->find($id);
     }
 
     public function update(Request $request, $id) {
-		$op = "U";
-		
         $validator = Validator::make(
 			$request->all(),
 			[
@@ -64,23 +56,25 @@ class AlunoController extends Controller
 		);
 		
 		if ( $validator->fails() ) {
-			return $validator->errors();
+			return Response::json($validator->errors(), 401);
 		}
 		
 		$result = $this->context->find($id);
+
 		if ( $result ){
-			$result = $result->update($request->all());			
-		}	
-		return $this->getMessageReturn($result, $op, null, null);		
+			$result->update($request->all());			
+		}
+
+		return $result;
+		
     }
 
     public function destroy($id) {
-		$op = "D";		
 		$result = $this->context->find($id);	
 		if ( $result ) {
-			$result = $result->delete();	
+			$result->delete();	
 		}				
-		return $this->getMessageReturn($result, $op, null, null);			
+		return $result;
     }
 	
     /**

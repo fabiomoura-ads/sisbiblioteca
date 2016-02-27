@@ -1,1 +1,87 @@
-<p>This is the Livro view.</p>
+<h3>Livros</h3>
+<div class="row">
+	<div class="col-md-4">
+		<input class="form-control" type="text" ng-model="query" placeholder="Pesquisar"  autofocus>
+	</div>
+	<div class="col-md-8">
+	<div class="text-right">
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+		  Cadastrar
+		</button>
+	</div>
+</div>
+<br>
+<br>
+
+<table class="table table-hover">
+	<tr>
+		<td>Id</td>
+		<td>Código</td>
+		<td>Título</td>
+		<td>Autor</td>
+		<td>Categoria</td>
+		<td>Editora</td>
+	</tr>
+	<tr dir-paginate="livros in livro.livros | itemsPerPage: 10 | filter: query">
+		<td>{{livros.id}}</td>
+		<td>
+      		<a data-toggle="modal" data-target="#myModal" href="" ng-click="livro.edit(livros.id, $index)">{{livros.codigo}}</a>
+    	</td>
+    	<td>{{livros.titulo}}</td>
+    	<td>{{livros.autor}}</td>
+    	<td>{{livros.categorias.nome}}</td>
+    	<td>{{livros.editoras.nome}}</td>
+	<td>
+      <a href="" ng-click="livro.delete(livros.id, $index)">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+      </a>
+    </td>
+	</tr>
+</table>
+<dir-pagination-controls></dir-pagination-controls>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{livro.pageTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+			<div class="form-group">
+				<input class="form-control" type="text" ng-model="livro.codigo" placeholder="Código" />
+			</div>
+			<div class="form-group">
+				<input class="form-control" type="text" ng-model="livro.titulo" placeholder="Título" />
+			</div>
+			<div class="form-group">
+				<input class="form-control" type="text" ng-model="livro.autor" placeholder="Autor" />
+			</div>
+			<div class="form-group">
+				<select ng-model="livro.categoria" class="form-control">
+					<option value="">* Selecione a categoria</option>
+					<option ng-repeat="categoria in livro.categorias" value="{{categoria.id}}">
+						{{categoria.nome}}
+					</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<select ng-model="livro.editora" class="form-control">
+					<option value="">* Selecione a editora</option>
+					<option ng-repeat="editora in livro.editoras" value="{{editora.id}}">
+						{{editora.nome}}
+					</option>
+				</select>
+			</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" ng-click="livro.store()" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
