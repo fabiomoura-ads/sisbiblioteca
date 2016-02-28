@@ -15,7 +15,6 @@
     "angular-bootstrap-confirm": "~1.0.0",
     "satellizer": "~0.13.4",
     "angular-ui-router": "~0.2.16",
-    "ng-admin": "~0.9.1",
     "toastr": "~2.1.2",
     "angular-toastr": "~1.6.0",
     "ng-flow": "~2.7.1",

@@ -35,7 +35,6 @@ module.exports = function(config) {
       'bower_components/angular-bootstrap-confirm/dist/angular-bootstrap-confirm.js',
       'bower_components/satellizer/satellizer.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/ng-admin/build/ng-admin.min.js',
       'bower_components/toastr/toastr.js',
       'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
       'bower_components/flow.js/dist/flow.js',

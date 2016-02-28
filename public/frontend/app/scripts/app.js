@@ -121,6 +121,14 @@ angular
         skipIfLoggedIn: skipIfLoggedIn
       }
     })
+    .state('remeber', {
+      url: '/remeber',
+      templateUrl: 'views/remeber.html',
+      controller: 'RemeberCtrl as remeber',
+      resolve:{
+        skipIfLoggedIn: skipIfLoggedIn
+      }
+    })
     .state('logout', {
       url: '/logout',
       templateUrl: 'views/logout.html',
