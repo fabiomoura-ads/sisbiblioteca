@@ -54,6 +54,7 @@ angular.module('frontendApp')
           nome: vm.nome,
           email: vm.email,
           telefone: vm.telefone
+          
         })
           .then(function(response){
             console.log(response.data);
